@@ -1,0 +1,50 @@
+
+[0m[3mResult #1[0m [0m[97mLOW[39m[0m [1mSecurity contact does not have a phone number listed.[0m [2m[0m
+[0m[0m[90m───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+[0m[0m  [3menvironments/preprod/test.tf[2m[3m:3
+[0m[0m[90m───────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[0m[0m[90m    1  [0m[0m  [38;5;33mresource[0m [38;5;37m"azurerm_security_center_contact"[0m [38;5;37m"tfsec_test"[0m {[0m
+[0m[90m    2  [0m[0m    [38;5;245memail[0m = [38;5;37m"test@example.com"[0m
+[0m[31m    3  [0m[0m[31m[[39m[0m[0m [0m  [38;5;245mphone[0m = [38;5;37m""[0m[0m [3m[3m[2m("")[0m
+[0m[90m    4  [0m[0m  [0m[0m
+[0m[90m    5  [0m[0m    [38;5;245malert_notifications[0m = [38;5;166mtrue[0m
+[0m[90m    6  [0m[0m  [0m  [38;5;245malerts_to_admins[0m     = [38;5;166mtrue[0m
+[0m[90m    7  [0m[0m  [0m}[0m
+[0m[90m───────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[0m[0m  [2m        ID[0m[3m azure-security-center-set-required-contact-details
+[0m[0m  [2m    Impact[0m Without a telephone number set, Azure support can't contact
+[0m[0m  [2mResolution[0m Set a telephone number for security center contact
+[0m[0m
+  [2mMore Information[0m[0m[0m
+  [2m-[0m [34mhttps://aquasecurity.github.io/tfsec/v1.28.14/checks/azure/security-center/set-required-contact-details/[0m[0m
+  [2m-[0m [34mhttps://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/security_center_contact#phone[0m[0m
+[90m───────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+
+
+[0m[0m  [1mtimings[0m
+  ──────────────────────────────────────────
+[0m[0m  [2mdisk i/o            [0m 5.740876ms
+[0m[0m  [2mparsing             [0m 15.71046ms
+[0m[0m  [2madaptation          [0m 306.041µs
+[0m[0m  [2mchecks              [0m 18.241289ms
+[0m[0m  [2mtotal               [0m 39.998666ms
+[0m
+[0m  [1mcounts[0m
+  ──────────────────────────────────────────
+[0m[0m  [2mmodules downloaded  [0m 0
+[0m[0m  [2mmodules processed   [0m 29
+[0m[0m  [2mblocks processed    [0m 147
+[0m[0m  [2mfiles read          [0m 85
+[0m
+[0m  [1mresults[0m
+  ──────────────────────────────────────────
+[0m[0m  [2mpassed              [0m 1
+[0m[0m  [2mignored             [0m 0
+[0m[0m  [2mcritical            [0m 0
+[0m[0m  [2mhigh                [0m 0
+[0m[0m  [2mmedium              [0m 0
+[0m[0m  [2mlow                 [0m 1
+[0m
+[0m  [31m[1m1 passed, 1 potential problem(s) detected.
+
+[0m
