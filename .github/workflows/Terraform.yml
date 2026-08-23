@@ -12,8 +12,12 @@ permissions:
 
 jobs:
 
-  terraform:
-    name: Terraform
+  # ==========================================
+  # TERRAFORM PLAN
+  # ==========================================
+
+  terraform-plan:
+    name: Terraform Plan
     runs-on: ubuntu-latest
 
     defaults:
@@ -23,13 +27,50 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v4
 
       - name: Azure Login
-        uses: azure/login@v2
+        uses: azure/login@v3
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan
+
+
+  # ==========================================
+  # TERRAFORM APPLY
+  # ==========================================
+
+  terraform-apply:
+    name: Terraform Apply
+    needs: terraform-plan
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./environments/preprod
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+
+      - name: Azure Login
+        uses: azure/login@v3
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
@@ -43,5 +84,4 @@ jobs:
         run: terraform plan
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
