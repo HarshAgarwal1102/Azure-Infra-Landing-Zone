@@ -23,7 +23,7 @@ jobs:
 
     env:
       STATE_RESOURCE_GROUP: rg-terraform-state
-      STATE_STORAGE_ACCOUNT: tfstatedatastore
+      STATE_STORAGE_ACCOUNT: tfstatedatastore123456
       STATE_CONTAINER: tfstate
 
     steps:
