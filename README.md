@@ -1,2 +1,2 @@
 # Azure-Infra-Landing-Zone
-Terraform Code
+Terraform Code full automated
