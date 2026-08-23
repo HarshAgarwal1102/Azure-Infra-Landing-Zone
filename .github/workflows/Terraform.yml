@@ -1,0 +1,47 @@
+name: Terraform
+
+on:
+  push:
+    branches:
+      - "features/**"
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./environments/preprod
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve

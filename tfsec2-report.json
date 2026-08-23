@@ -1,0 +1,27 @@
+{
+	"results": [
+		{
+			"rule_id": "AVD-AZU-0046",
+			"long_id": "azure-security-center-set-required-contact-details",
+			"rule_description": "The required contact details should be set for security center",
+			"rule_provider": "azure",
+			"rule_service": "security-center",
+			"impact": "Without a telephone number set, Azure support can't contact",
+			"resolution": "Set a telephone number for security center contact",
+			"links": [
+				"https://aquasecurity.github.io/tfsec/v1.28.14/checks/azure/security-center/set-required-contact-details/",
+				"https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/security_center_contact#phone"
+			],
+			"description": "Security contact does not have a phone number listed.",
+			"severity": "LOW",
+			"warning": false,
+			"status": 0,
+			"resource": "azurerm_security_center_contact.tfsec_test",
+			"location": {
+				"filename": "/Users/agarwal_harsh/Developer/DevOps/Terraform/Azure-Infra-Landing-Zone/environments/preprod/test.tf",
+				"start_line": 3,
+				"end_line": 3
+			}
+		}
+	]
+}
