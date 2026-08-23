@@ -10,14 +10,91 @@ permissions:
   contents: read
   id-token: write
 
+
 jobs:
 
-  # ==========================================
+  # ==========================================================
+  # BOOTSTRAP Files
+  # ==========================================================
+
+  bootstrap:
+    name: Bootstrap
+    runs-on: ubuntu-latest
+
+    env:
+      STATE_RESOURCE_GROUP: rg-terraform-state
+      STATE_STORAGE_ACCOUNT: tfstatedatastore123456
+      STATE_CONTAINER: tfstate
+
+    steps:
+
+      - name: Azure Login
+        uses: azure/login@v3
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Create State Resource Group
+        run: |
+          if az group show \
+            --name "$STATE_RESOURCE_GROUP" \
+            --output none 2>/dev/null
+          then
+            echo "Resource Group already exists"
+          else
+            az group create \
+              --name "$STATE_RESOURCE_GROUP" \
+              --location centralindia
+          fi
+
+      - name: Create State Storage Account
+        run: |
+          if az storage account show \
+            --name "$STATE_STORAGE_ACCOUNT" \
+            --resource-group "$STATE_RESOURCE_GROUP" \
+            --output none 2>/dev/null
+          then
+            echo "Storage Account already exists"
+          else
+            az storage account create \
+              --name "$STATE_STORAGE_ACCOUNT" \
+              --resource-group "$STATE_RESOURCE_GROUP" \
+              --location centralindia \
+              --sku Standard_LRS \
+              --min-tls-version TLS1_2 \
+              --allow-blob-public-access false
+          fi
+
+      - name: Create State Container
+        run: |
+          STORAGE_KEY=$(az storage account keys list \
+            --resource-group "$STATE_RESOURCE_GROUP" \
+            --account-name "$STATE_STORAGE_ACCOUNT" \
+            --query "[0].value" \
+            --output tsv)
+
+          if az storage container show \
+            --name "$STATE_CONTAINER" \
+            --account-name "$STATE_STORAGE_ACCOUNT" \
+            --account-key "$STORAGE_KEY" \
+            --output none 2>/dev/null
+          then
+            echo "Container already exists"
+          else
+            az storage container create \
+              --name "$STATE_CONTAINER" \
+              --account-name "$STATE_STORAGE_ACCOUNT" \
+              --account-key "$STORAGE_KEY" \
+              --public-access off
+          fi
+
+
+  # ==========================================================
   # TERRAFORM PLAN
-  # ==========================================
+  # ==========================================================
 
   terraform-plan:
     name: Terraform Plan
+    needs: bootstrap
     runs-on: ubuntu-latest
 
     defaults:
@@ -47,9 +124,9 @@ jobs:
         run: terraform plan
 
 
-  # ==========================================
+  # ==========================================================
   # TERRAFORM APPLY
-  # ==========================================
+  # ==========================================================
 
   terraform-apply:
     name: Terraform Apply
@@ -73,15 +150,6 @@ jobs:
         uses: azure/login@v3
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Validate
-        run: terraform validate
-
-      - name: Terraform Plan
-        run: terraform plan
 
       - name: Terraform Apply
         run: terraform apply -auto-approve

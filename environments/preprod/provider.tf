@@ -6,6 +6,13 @@ terraform {
       version = "4.80.0"
     }
   }
+  backend "azurerm" {
+    resource_group_name  = "rg-terraform-state"
+    storage_account_name = "tfstatedatastore123456"
+    container_name       = "tfstate"
+    key                  = "preprod.tfstate"
+  }
+
 }
 
 provider "azurerm" {
